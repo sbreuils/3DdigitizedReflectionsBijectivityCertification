@@ -1,1 +1,2 @@
-# 3D-digitized-reflections-bijective-certification
+# Bijectivity of 3D digitized reflections 
+Reproduction in c++ of an algorithm to certify quaternions for reflections. The operations between reflections and quaternions are performed with the geometric algebra library Klein. 
