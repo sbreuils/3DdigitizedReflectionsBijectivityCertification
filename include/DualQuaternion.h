@@ -248,6 +248,15 @@ struct QuaternionScalar {
         return QuaternionScalar<Scalar>(v1, s*value.w);
     }
 
+    // Scalar Division
+    QuaternionScalar<Scalar> operator/ (Scalar s) {
+        Scalar3<Scalar> v1;
+        v1.x = value.x/s;
+        v1.y = value.y/s;
+        v1.z = value.z/s;
+        return QuaternionScalar<Scalar>(v1, value.w/s);
+    }
+
     // Multiplication
     QuaternionScalar<Scalar> operator* (QuaternionScalar<Scalar> b) {
         Scalar3<Scalar> v1;
@@ -260,6 +269,7 @@ struct QuaternionScalar {
 
         return QuaternionScalar<Scalar> (v2*w1 + v1*w2 + cross(v1,v2), w1*w2 - dot(v1,v2));
     }
+
 
     // Addition
     QuaternionScalar<Scalar> operator+ (QuaternionScalar<Scalar> b) {
@@ -353,6 +363,11 @@ static QuaternionScalar<Scalar> InvQ (QuaternionScalar<Scalar> a) {
     return QuaternionScalar<Scalar>(-a.value.x/norm, -a.value.y/norm, -a.value.z/norm, a.value.w/norm);
 }
 
+
+typedef std::tuple<QuaternionScalar<float>,QuaternionScalar<float>,
+                   QuaternionScalar<float>,QuaternionScalar<float>,
+                   QuaternionScalar<float>,QuaternionScalar<float>,
+                   QuaternionScalar<float>,QuaternionScalar<float> > Region;
 
 
 template<class Scalar>
