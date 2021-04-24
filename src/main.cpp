@@ -20,10 +20,6 @@ Eigen::MatrixXi HermiteNormalForm(Eigen::MatrixXi A){
 
 }
 
-// compute the transformation of a region
-gadg::QuaternionScalar<int> QuaternionRegionMultiplication(gadg::QuaternionScalar<int>& v, gadg::QuaternionScalar<int>& c) {
-    return (v*c);
-}
 
 
 // compute the origin cubid voxel C[0]
@@ -34,6 +30,18 @@ gadg::Region CZero_Region() {
             gadg::QuaternionScalar<float>(-0.5,-0.5,0.5,0.0),gadg::QuaternionScalar<float>(-0.5,0.5,0.5,0.0),
             gadg::QuaternionScalar<float>(0.5,-0.5,0.5,0.0),gadg::QuaternionScalar<float>(0.5,0.5,0.5,0.0)
             );
+}
+
+// compute the transformation of a region
+gadg::Region QuaternionRegionMultiplication(gadg::Region cell, gadg::QuaternionScalar<int>& c) {
+    //
+    gadg::QuaternionScalar<float> c_cast((float)c.value.x,(float)c.value.y,(float)c.value.z,(float)c.value.w);
+    return std::make_tuple(
+            std::get<0>(cell)*c_cast,std::get<1>(cell)*c_cast,
+            std::get<0>(cell)*c_cast,std::get<1>(cell)*c_cast,
+            std::get<0>(cell)*c_cast,std::get<1>(cell)*c_cast,
+            std::get<6>(cell)*c_cast,std::get<7>(cell)*c_cast
+    );
 }
 
 
