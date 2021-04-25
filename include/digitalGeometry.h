@@ -25,8 +25,6 @@ gadg::Region QuaternionRegionMultiplication(gadg::Region cell, gadg::QuaternionS
 
 // compute the transformation of a region
 gadg::IntegerRegion regionRounding(gadg::Region cell) {
-    //
-
     return std::make_tuple(
             gadg::toLipschitzQuaternion(std::get<0>(cell)),gadg::toLipschitzQuaternion(std::get<1>(cell)),
             gadg::toLipschitzQuaternion(std::get<2>(cell)),gadg::toLipschitzQuaternion(std::get<3>(cell)),
