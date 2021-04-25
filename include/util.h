@@ -1,6 +1,8 @@
 
-#ifndef GADIGITALTRANSFORMATIONCERTIFICATION_UTIL_H
-#define GADIGITALTRANSFORMATIONCERTIFICATION_UTIL_H
+
+
+#pragma once
+
 
 namespace gadg {
     // gcd of more than two multivectors
@@ -24,4 +26,3 @@ namespace gadg {
         return gcd(z, res_gcd);
     }
 }
-#endif //GADIGITALTRANSFORMATIONCERTIFICATION_UTIL_H
