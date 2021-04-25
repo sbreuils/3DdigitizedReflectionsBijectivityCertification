@@ -368,6 +368,16 @@ namespace gadg {
             QuaternionScalar<float>, QuaternionScalar<float>,
             QuaternionScalar<float>, QuaternionScalar<float> > Region;
 
+    typedef std::tuple<QuaternionScalar<int>, QuaternionScalar<int>,
+            QuaternionScalar<int>, QuaternionScalar<int>,
+            QuaternionScalar<int>, QuaternionScalar<int>,
+            QuaternionScalar<int>, QuaternionScalar<int> > IntegerRegion;
+
+
+    template<class Scalar>
+    static QuaternionScalar<int> toLipschitzQuaternion(QuaternionScalar<Scalar> a){
+        return {(int)nearbyint(a.value.x),(int)nearbyint(a.value.y),(int)nearbyint(a.value.z),(int)nearbyint(a.value.w)};
+    }
 
     template<class Scalar>
     struct DualQuaternionScalar {

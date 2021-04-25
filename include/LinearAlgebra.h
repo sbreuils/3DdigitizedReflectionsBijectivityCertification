@@ -1,12 +1,11 @@
-//
-// Created by Stéphane Breuils on 2021/04/24.
-//
+
 
 #ifndef GADIGITALTRANSFORMATIONCERTIFICATION_LINEARALGEBRA_H
 #define GADIGITALTRANSFORMATIONCERTIFICATION_LINEARALGEBRA_H
 
 namespace gadg{
-// Compute system A
+
+    // Compute system A
     Eigen::MatrixXi systemA(const gadg::QuaternionScalar<int>& q){
         Eigen::MatrixXi A(4,6);
         int a = q.value.w;
@@ -20,6 +19,11 @@ namespace gadg{
                 -c, b,  a, -c,  b,  -a;
 
         return A;
+    }
+
+    // compute the Hermite normal form of A with an equivalent algo.
+    Eigen::MatrixXi HermiteNormalForm(Eigen::MatrixXi A){
+
     }
 
 
