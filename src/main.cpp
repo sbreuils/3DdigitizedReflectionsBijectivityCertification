@@ -17,19 +17,12 @@
 
 
 
-#define TESTED 1
-
-
-
-
 int main(int argc, char * argv[]){
 
     gadg::QuaternionScalar<int> q(1,3,5,2);
 
     std::cout <<"input q="<<std::endl;
     q.Print();
-
-
 
 //    Eigen::MatrixXi A = gadg::systemA(q);
 //    std::cout << "A="<<A<<std::endl;
@@ -47,5 +40,5 @@ int main(int argc, char * argv[]){
 
     std::cout << "Smith M = \n"<<M << std::endl; 
 
-	return 0;
+    return 0;
 }
