@@ -19,9 +19,6 @@
 
 int main(int argc, char * argv[]){
 
-    gadg::QuaternionScalar<int> q(1,7,5,2);
-    std::cout <<"input q="<<std::endl;
-    q.Print();
 
 //    Eigen::MatrixXi A = gadg::systemA(q);
 //    std::cout << "A="<<A<<std::endl;
@@ -64,6 +61,24 @@ int main(int argc, char * argv[]){
 
     std::cout << "has integer solution -> "<<gadg::hasIntegerSolutions(Dinv,std::get<1>(snf2), b, rank )<<std::endl;
 
+    std::cout << "**************************" << std::endl;
+
+    std::cout << "Compute the set of integer components quaternions inside a region ..."<< std::endl;
+
+    std::cout << "Choose a Lipshitz quaternion ..." << std::endl;
+    gadg::QuaternionScalar<int> q(1,7,5,2);
+    std::cout <<"input q="<<std::endl;
+    q.Print();
+
+    std::cout << "Compute the transformed region ..." << std::endl;
+    gadg::IntegerRegion transformedRegion = regionRounding(QuaternionRegionMultiplication(gadg::CZero_Region(), q));
+
+    std::cout << "Compute the bottom right corner" << std::endl;
+    gadg::QuaternionScalar<int> bottomCorner = getBottomLeftCornerFromIntegerRegion(transformedRegion);
+
+    std::cout << "Compute the set of Lipschitz quaternions inside integer regions ..." << std::endl;
+
+    std::vector<gadg::QuaternionScalar<int>> setOfLipschitzQ = integerComponentsInsideRegion(transformedRegion,bottomCorner);
 
 
 
