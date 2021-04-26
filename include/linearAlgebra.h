@@ -112,8 +112,7 @@ namespace gadg{
 
     // compute the Hermite normal form of A with an equivalent algo.
     // Smith Normal Form S of the M x N matrix A,
-
-    void HermiteNormalForm(const Eigen::MatrixXi& A){
+    Eigen::MatrixXi SmithDecomposition(const Eigen::MatrixXi& A){
         // init
         Eigen::MatrixXi L= Identity(A.rows());
         Eigen::MatrixXi R= Identity(A.cols());
@@ -165,8 +164,10 @@ namespace gadg{
                 }
             }
         }
+        std::cout << "U = \n"<<L<<std::endl;
+        std::cout << "V = \n"<<R<<std::endl;
 
-
+    return M;
 
     }
 
