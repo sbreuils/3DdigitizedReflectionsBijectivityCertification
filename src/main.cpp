@@ -20,7 +20,6 @@
 int main(int argc, char * argv[]){
 
     gadg::QuaternionScalar<int> q(1,7,5,2);
-
     std::cout <<"input q="<<std::endl;
     q.Print();
 
@@ -28,17 +27,46 @@ int main(int argc, char * argv[]){
 //    std::cout << "A="<<A<<std::endl;
 
     // compute the resolution of the system through the hermite normal form of A
-    Eigen::MatrixXi A(3,3);
-    A << 2,4,4,
+    Eigen::MatrixXi A1(3,3);
+    A1 << 2,4,4,
          -6,6,12,
           10,4,16; // example from SNF wikipedia page
 
-    std::cout << "A = "<<A << std::endl;
+    std::cout << "A1 = "<<A1 << std::endl;
+    gadg::SmithDecomposition snf1 = gadg::SmithDecompositionComputation(A1);
+    std::cout << "Smith M1 = \n"<<std::get<0>(snf1) << std::endl;
+
+    // example from https://core.ac.uk/download/pdf/82343294.pdf
+    Eigen::MatrixXi A2(5,7);
+    A2 <<   1,2,3,4,5,6,7,
+            1,0,1,0,1,0,1,
+            2,4,5,6,1,1,1,
+            1,4,2,5,2,0,0,
+            0,0,1,1,2,2,3;
+
+    std::cout << "A2 = "<<A2 << std::endl;
+    gadg::SmithDecomposition snf2 = gadg::SmithDecompositionComputation(A2);
+    std::cout << "Smith M2 = \n"<<std::get<0>(snf2) << std::endl;
+    std::cout << "Smith U2 = \n"<<std::get<1>(snf2) << std::endl;
+    std::cout << "Smith V2 = \n"<<std::get<2>(snf2) << std::endl;
+
+    Eigen::VectorXi b(5) ;
+    b<<28,4,20,14,9;
+
+    int rank = gadg::getRankSNF(snf2);
+    gadg::solve(snf2,b,rank);
+    std::cout << "obtained rank ="<<rank << std::endl;
+
+    Eigen::MatrixXf Dinv = Eigen::MatrixXf::Zero(rank,rank);
+    for(int i=0;i<rank;++i){
+        Dinv(i,i) = 1.0f/(float)(std::get<0>(snf2)(i,i));
+    }
+
+    std::cout << "has integer solution -> "<<gadg::hasIntegerSolutions(Dinv,std::get<1>(snf2), b, rank )<<std::endl;
 
 
-    Eigen::MatrixXi M = gadg::SmithDecomposition(A);
 
-    std::cout << "Smith M = \n"<<M << std::endl; 
+
 
     return 0;
 }

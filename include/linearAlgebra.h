@@ -7,6 +7,7 @@
 namespace gadg{
 
     typedef std::pair<int,int> MatrixIndex;
+    typedef std::tuple<Eigen::MatrixXi,Eigen::MatrixXi,Eigen::MatrixXi> SmithDecomposition;
 
 
 
@@ -110,9 +111,9 @@ namespace gadg{
 
 
 
-    // compute the Hermite normal form of A with an equivalent algo.
-    // Smith Normal Form S of the M x N matrix A,
-    Eigen::MatrixXi SmithDecomposition(const Eigen::MatrixXi& A){
+    // Smith Normal Form S of the M x N matrix A
+    // see https://www.dlfer.xyz/post/2016-10-27-smith-normal-form/ for more details about the algo
+    SmithDecomposition SmithDecompositionComputation(const Eigen::MatrixXi& A){
         // init
         Eigen::MatrixXi L= Identity(A.rows());
         Eigen::MatrixXi R= Identity(A.cols());
@@ -164,13 +165,78 @@ namespace gadg{
                 }
             }
         }
-        std::cout << "U = \n"<<L<<std::endl;
-        std::cout << "V = \n"<<R<<std::endl;
+//        std::cout << "U = \n"<<L<<std::endl;
+//        std::cout << "V = \n"<<R<<std::endl;
 
-    return M;
+        // check that L*M*V = A
+        std::cout << "Uinv = "<<L.cast<float>().inverse() << std::endl;
+        std::cout << "LMV = "<<(L*A*R) << std::endl;
+        std::cout << "A = "<<A << std::endl;
+    return std::make_tuple(M,L,R);
 
     }
 
+
+    // get the rank obtained after a SNF decomposition
+    int getRankSNF(const SmithDecomposition& snfOfA){
+        Eigen::MatrixXi S = std::get<0>(snfOfA);
+        int rank =0;
+        for(int i=0;i<S.rows();++i){
+            if(S(i,i)!=0){
+                rank+=1;
+            }
+        }
+        return rank;
+    }
+
+    // solve Ax=b through the Smith Normal form of A called SnfOfA
+    Eigen::VectorXf solve(const SmithDecomposition& snfOfA, const Eigen::VectorXi& b, const int rank ){
+        Eigen::MatrixXi S = std::get<0>(snfOfA);
+        //compute the inverse of S = [D,0 ; 0,0]
+        Eigen::MatrixXf Dinv = Eigen::MatrixXf::Zero(rank,rank);
+        for(int i=0;i<rank;++i){
+            Dinv(i,i) = 1.0f/(float)S(i,i);
+        }
+
+        // compute the product c=U*b
+        Eigen::MatrixXi U = std::get<1>(snfOfA);
+        std::cout << "U  =\n"<<U<<std::endl;
+        Eigen::VectorXi c = U*b;
+
+        // finally compute the product Dinv*c
+        Eigen::VectorXf y = Dinv*c.cast<float>();
+        std::cout << "y  =\n"<<y<<std::endl;
+
+        Eigen::MatrixXi V = std::get<2>(snfOfA);
+
+        Eigen::VectorXf y_withZeros(V.cols());
+        std::cout << "y with zeros before init =\n"<<y_withZeros<<std::endl;
+        y_withZeros << y,Eigen::VectorXf::Zero(std::abs(V.cols()-U.cols()));
+
+        std::cout << "y with zeros =\n"<<y_withZeros<<std::endl;
+
+        Eigen::VectorXf x = V.cast<float>()*y_withZeros;
+        std::cout << "solution =\n"<<x<<std::endl;
+
+        return x;
+    }
+
+    // solve Ax=b through the Smith Normal form of A called SnfOfA
+    bool hasIntegerSolutions(const Eigen::MatrixXf& Dinv,const Eigen::MatrixXi& U, const Eigen::VectorXi& b, const int rank ){
+
+        Eigen::VectorXi c = U*b;
+
+        // finally compute the product Dinv*c
+        Eigen::VectorXf y = Dinv*c.cast<float>();
+
+        bool hasIntegerSolutions;
+        for(int i=0 ; i<y.rows();++i){
+            if(std::fmod(y(i), static_cast<float>(1.0)) != 0.0)
+                return false;
+        }
+        return true;
+
+    }
 
 
 
