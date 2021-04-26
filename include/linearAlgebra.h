@@ -22,9 +22,12 @@ namespace gadg{
 
     // compute the Hermite normal form of A with an equivalent algo.
     Eigen::MatrixXi HermiteNormalForm(Eigen::MatrixXi A){
+        // hermite normal form of 
+        Eigen::MatrixXi H
         Eigen::FullPivLU<Eigen::MatrixXd> lu(A.cast<double>());
         std::cout << "Here is, up to permutations, its LU decomposition matrix:"
              << std::endl << lu.matrixLU() << std::endl;
+        return
     }
 
 

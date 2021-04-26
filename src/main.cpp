@@ -7,9 +7,9 @@
 #include <tuple>
 #include <Eigen/Dense>
 
-#include "DualQuaternion.h"
+#include "dualQuaternion.h"
 #include "util.h"
-#include "LinearAlgebra.h"
+#include "linearAlgebra.h"
 #include "digitalGeometry.h"
 
 
