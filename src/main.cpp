@@ -19,7 +19,7 @@
 
 int main(int argc, char * argv[]){
 
-    gadg::QuaternionScalar<int> q(1,3,5,2);
+    gadg::QuaternionScalar<int> q(1,7,5,2);
 
     std::cout <<"input q="<<std::endl;
     q.Print();
