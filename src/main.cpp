@@ -66,7 +66,7 @@ int main(int argc, char * argv[]){
     std::cout << "Compute the set of integer components quaternions inside a region ..."<< std::endl;
 
     std::cout << "Choose a Lipshitz quaternion ..." << std::endl;
-    gadg::QuaternionScalar<int> q(1,7,5,2);
+    gadg::QuaternionScalar<int> q(2,0,0,0);
     std::cout <<"input q="<<std::endl;
     q.Print();
 
@@ -80,7 +80,19 @@ int main(int argc, char * argv[]){
 
     std::vector<gadg::QuaternionScalar<int>> setOfLipschitzQ = integerComponentsInsideRegion(transformedRegion,bottomCorner);
 
+    // compute the region as two quaternion vectors
+    gadg::RegionAsNormalHalfDistanceQuaternions C0Normal =  gadg::CZero_Region_WithNormal();
+    // transform the region
+    gadg::QuaternionScalar<int> qconj = q.Conjugate();
+    std::cout << "qconj = "<<std::endl;
+    qconj.Print();
+    gadg::RegionAsNormalHalfDistanceQuaternions C0normal_q = gadg::RegionAsNormalMultiplication(C0Normal, qconj);
 
+    // check if a quaternion is inside the resulting region
+    gadg::QuaternionScalar<int> quaternionTotest = gadg::QuaternionScalar<int>(0,0,0,0);
+    bool isInsideRegion = gadg::isInsideRegionAsNormal(C0normal_q,q, quaternionTotest);
+
+    std::cout << "quaternion is inside ? "<<isInsideRegion<<std::endl;
 
 
     return 0;

@@ -15,8 +15,14 @@ namespace gadg {
         );
     }
 
+    RegionAsNormalHalfDistanceQuaternions CZero_Region_WithNormal() {
+        return std::make_pair(
+                gadg::QuaternionScalar<float>(1.0, 0.0, 0.0, 0.0),
+                gadg::QuaternionScalar<float>(0.5, 0.5, 0.5, 0.0));
+    }
 
-// compute the transformation of a region
+
+    // compute the transformation of a region
     Region QuaternionRegionMultiplication(gadg::Region cell, gadg::QuaternionScalar<int> &c) {
         //
         gadg::QuaternionScalar<float> c_cast((float) c.value.x, (float) c.value.y, (float) c.value.z,
@@ -28,6 +34,47 @@ namespace gadg {
                 std::get<6>(cell) * c_cast, std::get<7>(cell) * c_cast
         );
     }
+
+    RegionAsNormalHalfDistanceQuaternions RegionAsNormalMultiplication(RegionAsNormalHalfDistanceQuaternions& cell, QuaternionScalar<int>& c) {
+        gadg::QuaternionScalar<float> c_cast((float) c.value.x, (float) c.value.y, (float) c.value.z,
+                                             (float) c.value.w);
+        gadg::QuaternionScalar<float> scaledNormalVector = c_cast.Conjugate()*cell.first*c_cast;
+        return std::make_pair(
+                scaledNormalVector/((float)sqrt(scaledNormalVector.value.x * scaledNormalVector.value.x + scaledNormalVector.value.y * scaledNormalVector.value.y + scaledNormalVector.value.z * c.value.z + c.value.w * c.value.w)),
+                c_cast.Conjugate()*cell.second*c_cast);
+    }
+
+    // return whether or not the given quaternion is inside the region
+    bool isInsideRegionAsNormal(RegionAsNormalHalfDistanceQuaternions region, QuaternionScalar<int>& q, const QuaternionScalar<int>& c){
+//        bool isInside = false;
+
+        std::cout << "Transformed region:\n normal vector =" << std::endl;
+        QuaternionScalar<float> normalRegion = region.first;
+        normalRegion.Print();
+        QuaternionScalar<float> halfDistQuaternion = region.second;
+
+        std::cout << "half distance vector =" << std::endl;
+        halfDistQuaternion.Print();
+
+
+        std::cout << "1st distance =" << abs((float)c.value.x * normalRegion.value.x) << std::endl;
+        std::cout << "2nd distance =" << abs((float)c.value.y * normalRegion.value.y) << std::endl;
+        std::cout << "3rd distance =" << abs((float)c.value.z * normalRegion.value.z) << std::endl;
+        std::cout << "4th distance =" << abs((float)c.value.w * normalRegion.value.w) << std::endl;
+
+
+        if( (abs((float)c.value.x * normalRegion.value.x) <= abs(halfDistQuaternion.value.x) )&&
+                ( abs((float)c.value.y * normalRegion.value.y) <= abs(halfDistQuaternion.value.y)) &&
+                (abs((float)c.value.z * normalRegion.value.z) <= abs(halfDistQuaternion.value.z) ) &&
+                (abs((float)c.value.w * normalRegion.value.w) <= abs(halfDistQuaternion.value.w))){
+            return true;
+        }
+
+        return false;
+    }
+
+
+
 
 // compute the transformation of a region
     IntegerRegion regionRounding(gadg::Region cell) {

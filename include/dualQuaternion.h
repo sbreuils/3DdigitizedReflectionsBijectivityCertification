@@ -372,6 +372,7 @@ namespace gadg {
             QuaternionScalar<int>, QuaternionScalar<int>,
             QuaternionScalar<int>, QuaternionScalar<int> > IntegerRegion;
 
+    typedef std::pair<QuaternionScalar<float>, QuaternionScalar<float>> RegionAsNormalHalfDistanceQuaternions;
 
     template<class Scalar>
     static QuaternionScalar<int> toLipschitzQuaternion(QuaternionScalar<Scalar> a){

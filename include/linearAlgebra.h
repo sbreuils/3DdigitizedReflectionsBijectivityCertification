@@ -229,7 +229,6 @@ namespace gadg{
         // finally compute the product Dinv*c
         Eigen::VectorXf y = Dinv*c.cast<float>();
 
-        bool hasIntegerSolutions;
         for(int i=0 ; i<y.rows();++i){
             if(std::fmod(y(i), static_cast<float>(1.0)) != 0.0)
                 return false;
